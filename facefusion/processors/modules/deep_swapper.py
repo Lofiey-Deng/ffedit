@@ -27,62 +27,6 @@ from facefusion.vision import conditional_match_frame_color, read_image, read_st
 
 
 @lru_cache(maxsize = None)
-def create_static_model_set(download_scope : DownloadScope) -> ModelSet:
-	model_config = []
-
-	if download_scope == 'full':
-		model_config.extend()
-	if download_scope in [ 'lite', 'full' ]:
-		model_config.extend()
-	if download_scope == 'full':
-		model_config.extend()
-	model_set : ModelSet = {}
-
-	for model_scope, model_name in model_config:
-		model_id = '/'.join([ model_scope, model_name ])
-
-		model_set[model_id] =\
-		{
-			'hashes':
-			{
-				'deep_swapper':
-				{
-					'url': resolve_download_url_by_provider('huggingface', 'deepfacelive-models-' + model_scope, model_name + '.hash'),
-					'path': resolve_relative_path('../.assets/models/' + model_scope + '/' + model_name + '.hash')
-				}
-			},
-			'sources':
-			{
-				'deep_swapper':
-				{
-					'url': resolve_download_url_by_provider('huggingface', 'deepfacelive-models-' + model_scope, model_name + '.dfm'),
-					'path': resolve_relative_path('../.assets/models/' + model_scope + '/' + model_name + '.dfm')
-				}
-			},
-			'template': 'dfl_whole_face'
-		}
-
-	custom_model_file_paths = resolve_file_paths(resolve_relative_path('../.assets/models/custom'))
-
-	if custom_model_file_paths:
-
-		for model_file_path in custom_model_file_paths:
-			model_id = '/'.join([ 'custom', get_file_name(model_file_path) ])
-
-			model_set[model_id] =\
-			{
-				'sources':
-				{
-					'deep_swapper':
-					{
-						'path': resolve_relative_path(model_file_path)
-					}
-				},
-				'template': 'dfl_whole_face'
-			}
-
-	return model_set
-
 
 def get_inference_pool() -> InferencePool:
 	model_names = [ state_manager.get_item('deep_swapper_model') ]
